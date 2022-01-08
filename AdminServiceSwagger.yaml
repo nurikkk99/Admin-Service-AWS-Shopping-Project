@@ -1,0 +1,398 @@
+swagger: "2.0"
+info:
+  description: This is a simple API for Admin Endpoints
+  version: 1.0.0
+  title: AWS Admin Endpoints
+host: virtserver.swaggerhub.com
+basePath: /nurikkk99/AWS_Shopping_Project/1.0.0
+tags:
+  - name: goods-controller
+    description: Goods Controller
+  - name: security-controller
+    description: Operations for authorizing
+schemes:
+  - https
+  - http
+paths:
+  /api/goods:
+    get:
+      tags:
+        - goods-controller
+      summary: Returns all goods
+      operationId: getGoods
+      produces:
+        - application/json
+      parameters:
+        - name: page
+          in: query
+          description: The page number (countdown starts from zero)
+          required: false
+          type: integer
+          default: 0
+        - name: size
+          in: query
+          description: The page size
+          required: false
+          type: integer
+          default: 10
+      responses:
+        "200":
+          description: Succesful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/GetGoodModel'
+        "400":
+          description: Not Found
+    post:
+      tags:
+        - goods-controller
+      summary: Adds a good
+      operationId: addGood
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Add good
+          required: false
+          schema:
+            $ref: '#/definitions/CreateUpdateGoodModel'
+      responses:
+        "200":
+          description: Item created
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/GetGoodModel'
+        "400":
+          description: Bad request
+  /api/goods/{goodId}:
+    get:
+      tags:
+        - goods-controller
+      summary: Find good by Id
+      description: Returns a single good
+      operationId: getGoodById
+      produces:
+        - application/json
+      parameters:
+        - name: goodId
+          in: path
+          description: ID of a good to return
+          required: true
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/GetGoodModel'
+    put:
+      tags:
+        - goods-controller
+      summary: Update a good
+      operationId: putGood
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Refresh good
+          required: false
+          schema:
+            $ref: '#/definitions/CreateUpdateGoodModel'
+        - name: goodId
+          in: path
+          required: true
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: Item created
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/GetGoodModel'
+        "400":
+          description: Bad request
+    delete:
+      tags:
+        - goods-controller
+      summary: Delete a good by id
+      description: Delete a single good by id
+      operationId: deleteGoodById
+      produces:
+        - application/json
+      parameters:
+        - name: goodId
+          in: path
+          required: true
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: Operation succesfull
+        "400":
+          description: Bad request
+  /api/goods/{goodId}/image:
+    get:
+      tags:
+        - goods-controller
+      summary: Find all images by good Id
+      description: Returns images by good id
+      produces:
+        - application/json
+      parameters:
+        - name: goodId
+          in: path
+          description: ID of a good which images need to return
+          required: true
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/GetImageModel'
+    post:
+      tags:
+        - goods-controller
+      summary: Save image by good id
+      description: Save image by good id
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - name: goodId
+          in: path
+          required: true
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: Item created
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/GetImageModel'
+        "400":
+          description: Bad request
+    delete:
+      tags:
+        - goods-controller
+      summary: Delete all images of good by good id
+      description: Delete images by good id
+      produces:
+        - application/json
+      parameters:
+        - name: goodId
+          in: path
+          required: true
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: Operation succesfull
+        "400":
+          description: Bad request
+  /api/goods/{goodId}/image/{imageId}:
+    get:
+      tags:
+        - goods-controller
+      summary: Find single image by good Id and image id
+      description: Returns single image
+      produces:
+        - application/json
+      parameters:
+        - name: goodId
+          in: path
+          description: ID of a good which image need to return
+          required: true
+          type: integer
+          format: int64
+        - name: imageId
+          in: path
+          description: ID of an image which need to return
+          required: true
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/GetImageModel'
+    delete:
+      tags:
+        - goods-controller
+      summary: Delete single image of good by good id and image id
+      description: Delete image by good id and image id
+      produces:
+        - application/json
+      parameters:
+        - name: goodId
+          in: path
+          description: ID of a good which image need to delete
+          required: true
+          type: integer
+          format: int64
+        - name: imageId
+          in: path
+          description: ID of an image which need to delete
+          required: true
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: Operation succesfull
+        "400":
+          description: Bad request
+  /api/security/admin:
+    post:
+      tags:
+        - security-controller
+      summary: Create an admin
+      description: Creating an admin in system
+      operationId: createAdmin
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Created user object
+          required: true
+          schema:
+            $ref: '#/definitions/Admin'
+      responses:
+        "200":
+          description: OK
+    put:
+      tags:
+        - security-controller
+      summary: Update an admin
+      description: Updating an admin in system
+      operationId: updateAdmin
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Created user object
+          required: true
+          schema:
+            $ref: '#/definitions/Admin'
+      responses:
+        "200":
+          description: OK
+  /api/security/admin/login:
+    get:
+      tags:
+        - security-controller
+      summary: Logs admin into the system
+      operationId: logInAdmin
+      parameters:
+        - name: username
+          in: query
+          description: The user name for login
+          required: true
+          type: string
+        - name: password
+          in: query
+          description: The password for login in clear text
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Successful operation
+        "400":
+          description: Invalid username/password supplied
+definitions:
+  GetGoodModel:
+    type: object
+    required:
+      - name
+      - price
+      - releaseDate
+    properties:
+      id:
+        type: string
+        format: uuid
+        example: d290f1ee-6c54-4b01-90e6-d701748f0851
+      name:
+        type: string
+        example: AirForce
+      type:
+        type: string
+        example: Sneakers
+      price:
+        type: integer
+        format: int64
+        example: 3000
+      manufacturer:
+        type: string
+        example: Nike
+      releaseDate:
+        type: string
+        format: date-time
+        example: 2016-08-29T09:12:33.000+0000
+  CreateUpdateGoodModel:
+    type: object
+    properties:
+      name:
+        type: string
+        example: AirForce
+      type:
+        type: string
+        example: Sneakers
+      price:
+        type: integer
+        format: int64
+        example: 3000
+      manufacturer:
+        type: string
+        example: Nike
+  GetImageModel:
+    type: object
+    properties:
+      imageId:
+        type: integer
+        format: int64
+        example: 1
+      goodId:
+        type: integer
+        format: int64
+        example: 1
+      URL:
+        type: string
+        example: http://localhost:4566/admin.goods.images/14.1.Nike.jpeg
+  Admin:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      username:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      email:
+        type: string
+      password:
+        type: string
+      phone:
+        type: string
+    xml:
+      name: User
