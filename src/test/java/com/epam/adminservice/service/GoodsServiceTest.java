@@ -1,9 +1,6 @@
 package com.epam.adminservice.service;
 
-import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertEquals;
-
-import com.epam.adminservice.config.S3TestContainer;
+import org.junit.jupiter.api.Assertions;
 import com.epam.adminservice.config.TestContainerConfig;
 import com.epam.adminservice.dto.CreateGoodDto;
 import com.epam.adminservice.dto.GetImageDto;
@@ -15,30 +12,30 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.multipart.MultipartFile;
 import org.testcontainers.containers.JdbcDatabaseContainer;
-import org.testcontainers.containers.localstack.LocalStackContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.shaded.com.google.common.io.Files;
 import org.testcontainers.shaded.org.apache.commons.io.IOUtils;
 
-@SpringBootTest(classes = {TestContainerConfig.class, S3TestContainer.class})
+@SpringBootTest(classes = {TestContainerConfig.class})
 @Testcontainers
-@RunWith(SpringRunner.class)
 @ActiveProfiles("test")
-public class GoodServiceTest {
+public class GoodsServiceTest {
 
     private static final String IMAGE_KEY = "testKey";
+
+    @MockBean
+    QueueService queueService;
 
     @Value("${s3.bucketName}")
     private String bucketName;
@@ -52,10 +49,7 @@ public class GoodServiceTest {
     @Autowired
     private GoodsService goodsService;
 
-    @Autowired
-    private LocalStackContainer localStackContainer;
-
-    @Before
+    @BeforeEach
     public void prepareData() throws IOException {
         CreateGoodDto goodDto = new CreateGoodDto();
         goodDto.setId(1L);
@@ -74,7 +68,7 @@ public class GoodServiceTest {
         savedImageDto = goodsService.saveImage(savedGoodDto.getId(),multipartFile);
     }
 
-    @After
+    @AfterEach
     public void dropData() {
         goodsService.deleteAllImagesByGoodId(savedGoodDto.getId());
         goodsService.deleteAll();
@@ -85,25 +79,25 @@ public class GoodServiceTest {
         List<GetImageDto> expectedList = new ArrayList<>();
         expectedList.add(savedImageDto);
         List<GetImageDto> actualList = goodsService.getImagesByGoodId(savedGoodDto.getId());
-        assertEquals(expectedList, actualList);
+        Assertions.assertEquals(expectedList, actualList);
     }
 
     @Test
     public void getImageByImageIdTest() {
         GetImageDto getImageDto = goodsService.getImageByImageId(savedImageDto.getImageId());
-        assertEquals(savedImageDto, getImageDto);
+        Assertions.assertEquals(savedImageDto, getImageDto);
     }
 
     @Test
     public void deleteImageByImageTest() {
         goodsService.deleteImage(savedImageDto.getImageId());
-        assertThrows(Exception.class, ()->goodsService.getImageByImageId(savedImageDto.getImageId()));
+        Assertions.assertThrows(Exception.class, ()->goodsService.getImageByImageId(savedImageDto.getImageId()));
     }
 
     @Test
     public void deleteAllImagesByGoodIdTest() {
         goodsService.deleteAllImagesByGoodId(savedGoodDto.getId());
-        assertThrows(Exception.class, ()->goodsService.getImageByImageId(savedImageDto.getImageId()));
+        Assertions.assertThrows(Exception.class, ()->goodsService.getImageByImageId(savedImageDto.getImageId()));
     }
 
     @Test
@@ -112,6 +106,6 @@ public class GoodServiceTest {
         FileInputStream inputStream = new FileInputStream(file);
         MultipartFile multipartFile = new MockMultipartFile(
                 "file", file.getName(), "image/png", IOUtils.toByteArray(inputStream));
-        assertThrows(IllegalArgumentException.class, () -> goodsService.saveImage(savedGoodDto.getId(), multipartFile));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> goodsService.saveImage(savedGoodDto.getId(), multipartFile));
     }
 }

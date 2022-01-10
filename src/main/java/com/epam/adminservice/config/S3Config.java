@@ -1,5 +1,6 @@
 package com.epam.adminservice.config;
 
+import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.client.builder.AwsClientBuilder.EndpointConfiguration;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
@@ -29,9 +30,11 @@ public class S3Config {
     }
 
     @Bean
-    AmazonS3 configureS3Client() {
+    public AmazonS3 configureS3Client() {
+        logger.info("Creating s3 client with parameters {} {} {}", s3Region, s3URI, bucketName);
         AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
-                .withEndpointConfiguration(new EndpointConfiguration(s3URI, s3Region)).withPathStyleAccessEnabled(true)
+                .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(s3URI, s3Region))
+                .withPathStyleAccessEnabled(true)
                 .build();
         if (!bucketIsExists(s3Client)) {
             logger.info("Creating bucket with name {}", bucketName);
@@ -42,6 +45,6 @@ public class S3Config {
 
     private boolean bucketIsExists(AmazonS3 s3) {
         logger.info("Checking bucket with name {} is already exists", bucketName);
-        return s3.listBuckets().contains(Bucket.builder().name(bucketName).build());
+        return s3.doesBucketExistV2(bucketName);
     }
 }

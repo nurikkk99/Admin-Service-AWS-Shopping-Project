@@ -6,12 +6,11 @@ services:
     network_mode: bridge
     ports:
       - "4566:4566"
-      - "4571:4571"
     environment:
       - SERVICES=s3
       - DEBUG=${DEBUG- }
       - DATA_DIR=/data
-      - HOST_TMP_FOLDER = ${TMPDIR:-/tmp/}localstack
+      - HOST_TMP_FOLDER${TMPDIR:-/tmp/}localstack
       - DOCKER_HOST=unix:///var/run/docker.sock
 
   postgres:
