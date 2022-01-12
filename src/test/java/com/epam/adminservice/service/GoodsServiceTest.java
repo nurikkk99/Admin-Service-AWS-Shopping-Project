@@ -55,6 +55,7 @@ public class GoodsServiceTest {
         goodDto.setId(1L);
         goodDto.setName("AirForce");
         goodDto.setType(GoodsType.Sneakers);
+        goodDto.setManufacturer("Nike");
         goodDto.setPrice(BigDecimal.valueOf(7000));
         goodDto.setReleaseDate(LocalDateTime.now());
         savedGoodDto = goodsService.save(goodDto);
