@@ -3,33 +3,31 @@ package com.epam.adminservice.repository;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
-import com.epam.adminservice.config.S3TestContainer;
+import com.epam.adminservice.config.TestContainerConfig;
+import com.epam.adminservice.service.QueueService;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.multipart.MultipartFile;
-import org.testcontainers.containers.localstack.LocalStackContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.shaded.com.google.common.io.Files;
 import org.testcontainers.shaded.org.apache.commons.io.IOUtils;
 
-@SpringBootTest(classes = S3TestContainer.class)
+@SpringBootTest(classes = TestContainerConfig.class)
 @Testcontainers
-@RunWith(SpringRunner.class)
 @ActiveProfiles("test")
 public class ImageS3RepositoryTest {
 
-    @Autowired
-    LocalStackContainer localStackContainer;
+    @MockBean
+    QueueService queueService;
 
     @Autowired
     AmazonS3 s3Client;
@@ -39,11 +37,6 @@ public class ImageS3RepositoryTest {
 
     @Value("${s3.bucketName}")
     String bucketName;
-
-    @Test
-    public void doSomething(){
-        System.out.println();
-    }
 
     @Test
     public void saveImageTest() throws IOException {
@@ -59,7 +52,7 @@ public class ImageS3RepositoryTest {
         S3ObjectInputStream inputStream1 = s3Object.getObjectContent();
         byte [] actualArray = IOUtils.toByteArray(s3Object.getObjectContent());
 
-        Assert.assertArrayEquals(expectedArray, actualArray);
+        Assertions.assertArrayEquals(expectedArray, actualArray);
     }
 
 }
