@@ -1,8 +1,8 @@
 package com.epam.adminservice.dto;
 
-public interface EntityDtoMapper<T,E> {
+public interface EntityDtoMapper<H,E> {
 
-  T entityToDto(E entity);
+  H entityToDto(E entity);
 
   E dtoToEntity();
 }

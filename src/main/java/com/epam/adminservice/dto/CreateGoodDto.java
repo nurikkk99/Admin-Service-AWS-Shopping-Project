@@ -9,6 +9,8 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
+import java.util.List;
+import java.util.LinkedList;
 
 public class CreateGoodDto implements EntityDtoMapper<CreateGoodDto, GoodEntity> {
 

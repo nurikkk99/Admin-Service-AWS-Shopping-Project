@@ -2,7 +2,6 @@ package com.epam.adminservice.service;
 
 import com.epam.adminservice.dto.CreateGoodDto;
 import com.epam.adminservice.dto.GetImageDto;
-import com.epam.adminservice.entity.ImageEntity;
 import com.epam.adminservice.dto.ImageQueueRequestDto;
 import com.epam.adminservice.dto.ProductQueueRequestDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
