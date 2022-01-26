@@ -1,7 +1,5 @@
 package com.epam.adminservice.dto;
 
-import com.epam.adminservice.dto.CreateGoodDto;
-
 public class ProductQueueRequestDto {
     private String type;
     private CreateGoodDto productDto;
