@@ -4,22 +4,31 @@ import com.epam.adminservice.entity.GoodEntity;
 import com.epam.adminservice.entity.GoodsType;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.List;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 
-public class GetGoodDto implements EntityDtoMapper<GetGoodDto, GoodEntity> {
+public class CreateGoodDto implements EntityDtoMapper<CreateGoodDto, GoodEntity> {
 
+    @Null(message = "Entity id shouldn't be specified explicitly in request body")
     private Long id;
+
+    @NotNull(message = "Name must be given")
+    @NotBlank(message = "Name may not be empty")
     private String name;
     private GoodsType type;
-    private BigDecimal price;
-    private String manufacturer;
-    private LocalDateTime releaseDate;
 
-    public String getName() {
-        return name;
-    }
+    @NotNull(message = "Price must be given")
+    @Min(value = 1, message = "The value can not be less than 1")
+    private BigDecimal price;
+
+    @NotNull(message = "Manufacturer must be given")
+    private String manufacturer;
+
+    @Null(message = "Release date must not be given")
+    private LocalDateTime releaseDate;
 
     public Long getId() {
         return id;
@@ -27,6 +36,10 @@ public class GetGoodDto implements EntityDtoMapper<GetGoodDto, GoodEntity> {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void setName(String name) {
@@ -67,8 +80,8 @@ public class GetGoodDto implements EntityDtoMapper<GetGoodDto, GoodEntity> {
 
 
     @Override
-    public GetGoodDto entityToDto(GoodEntity goodEntity) {
-        GetGoodDto goodDto = new GetGoodDto();
+    public CreateGoodDto entityToDto(GoodEntity goodEntity) {
+        CreateGoodDto goodDto = new CreateGoodDto();
         goodDto.setId(goodEntity.getId());
         goodDto.setName(goodEntity.getName());
         Optional.ofNullable(goodEntity.getType()).ifPresent(x -> goodDto.setType(GoodsType.valueOf(x)));
@@ -81,29 +94,12 @@ public class GetGoodDto implements EntityDtoMapper<GetGoodDto, GoodEntity> {
     @Override
     public GoodEntity dtoToEntity() {
         GoodEntity goodEntity = new GoodEntity();
-        goodEntity.setId(this.id);
+        goodEntity.setId(this.getId());
         goodEntity.setName(this.name);
         Optional.ofNullable(this.type).ifPresent(x -> goodEntity.setType(x.toString()));
         goodEntity.setPrice(this.price);
         goodEntity.setManufacturer(this.getManufacturer());
         goodEntity.setReleaseDate(this.releaseDate);
         return goodEntity;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        GetGoodDto that = (GetGoodDto) o;
-        return Objects.equals(id, that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
     }
 }

@@ -37,9 +37,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.multipart.MultipartFile;
-import org.testcontainers.containers.JdbcDatabaseContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.shaded.com.google.common.io.Files;
 import org.testcontainers.shaded.org.apache.commons.io.IOUtils;
 
 @SpringBootTest(classes = {TestContainerConfig.class})
