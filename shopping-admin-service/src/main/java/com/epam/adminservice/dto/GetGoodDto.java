@@ -2,8 +2,12 @@ package com.epam.adminservice.dto;
 
 import com.epam.adminservice.entity.GoodEntity;
 import com.epam.adminservice.entity.GoodsType;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -14,6 +18,9 @@ public class GetGoodDto implements EntityDtoMapper<GetGoodDto, GoodEntity> {
     private GoodsType type;
     private BigDecimal price;
     private String manufacturer;
+
+    @JsonDeserialize(using = DateDeserializer.class)
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime releaseDate;
 
     public String getName() {

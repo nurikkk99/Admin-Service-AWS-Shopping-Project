@@ -67,9 +67,10 @@ public class GoodsService {
         );
         CreateGoodDto savedGoodDto = goodDto.entityToDto(goodsRepository.save(goodDto.dtoToEntity()));
         logger.info("Good entity was saved with id = {}", savedGoodDto.getId());
-        queueService.addProductToQueue("save", savedGoodDto);
+        queueService.addProductToQueue("save", savedGoodDto.getId());
         return savedGoodDto;
     }
+
 
     public UpdateGoodDto update(Long id, UpdateGoodDto goodDto) {
         GoodEntity goodEntity = goodsRepository.findById(id)
@@ -78,7 +79,7 @@ public class GoodsService {
         goodDto.setId(id);
         goodDto.setReleaseDate(getGoodDto.entityToDto(goodEntity).getReleaseDate());
         GoodEntity savedEntity = goodsRepository.save(goodDto.dtoToEntity());
-        queueService.addProductToQueue("update", new CreateGoodDto().entityToDto(savedEntity));
+        queueService.addProductToQueue("update", savedEntity.getId());
         return goodDto.entityToDto(savedEntity);
     }
 
