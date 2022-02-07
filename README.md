@@ -39,7 +39,5 @@ Available addresses for interaction:
 | Localstack(S3)  | http://localhost:4566  |
 
 3. Set environment variables:
-- spring.datasource.username=user;
-- spring.datasource.password=pass;
 - spring.profiles.active=local;
 4. The project can be started!
