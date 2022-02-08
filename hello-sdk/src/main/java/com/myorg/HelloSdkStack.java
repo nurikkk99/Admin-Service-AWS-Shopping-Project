@@ -160,14 +160,15 @@ public class HelloSdkStack extends Stack {
                 .stringValue(userProperty.getPassword())
                 .build();
 
+
         //EC2 service
         IRole serviceTaskRole = Role.Builder.create(this, "ServiceTaskRole")
                 .assumedBy(ServicePrincipal.Builder.create("ecs-tasks.amazonaws.com").build()).build();
 
         ISecret secret = software.amazon.awscdk.services.secretsmanager.Secret.fromSecretCompleteArn(
-                this, "awsSecrets", "arn:aws:secretsmanager:eu-west-2:356106348453:secret:aws_application_secrets-NF5rPF");
+                this, "awsSecrets", "arn:aws:secretsmanager:eu-west-2:356106348453:secret:aws_secrets-U7vJ29");
 
-        ApplicationLoadBalancedEc2Service.Builder.create(this, "shopping-service")
+        ApplicationLoadBalancedEc2Service ec2Service = ApplicationLoadBalancedEc2Service.Builder.create(this, "shopping-service")
                 .cluster(cluster)
                 .publicLoadBalancer(true)
                 .healthCheckGracePeriod(Duration.hours(4))
@@ -203,6 +204,11 @@ public class HelloSdkStack extends Stack {
                                 .containerPort(8081)
                                 .build()
                 )
+                .build();
+
+        StringParameter.Builder.create(this, "loadBalancerDns")
+                .parameterName("adminServiceLoadBalancerDNSName")
+                .stringValue(ec2Service.getLoadBalancer().getLoadBalancerDnsName())
                 .build();
 
     }

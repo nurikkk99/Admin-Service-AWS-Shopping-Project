@@ -2,6 +2,8 @@ package com.epam.adminservice.dto;
 
 import com.epam.adminservice.entity.GoodEntity;
 import com.epam.adminservice.entity.GoodsType;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -28,6 +30,8 @@ public class CreateGoodDto implements EntityDtoMapper<CreateGoodDto, GoodEntity>
     private String manufacturer;
 
     @Null(message = "Release date must not be given")
+    @JsonDeserialize(using = DateDeserializer.class)
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime releaseDate;
 
     public Long getId() {
